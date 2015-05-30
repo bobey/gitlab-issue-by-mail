@@ -1,0 +1,11 @@
+mail:
+    from:       bug@yourdomain.tld
+    host:       imap.yourdomain.tld
+    port:       143
+    username:   gouzigouza
+    password:   passw0rd
+
+gitlab:
+    host:       gitlab.com
+    projectId:  1
+    token:      123456789
