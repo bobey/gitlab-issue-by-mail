@@ -1,5 +1,6 @@
 mail:
     server:     imap.yourdomain.tld
+    type:       imap
     port:       143
     username:   gouzigouza
     password:   passw0rd
