@@ -42,3 +42,7 @@ description and delete it from your mail server. That's all. Nothing more!
 3. `bin/console gitlab:fetch-mail -v`
 
 You should create some kind of CRON to run this command regularly.
+
+## TODO
+
+- Extract attachments and add them to Gitlab issue
