@@ -1,4 +1,4 @@
-# gitlab-issue-by-mail
+# Create a Gitlab issue from a mail
 
 Add new issue to your Gitlab by sending an email to bug@yourdomain.com
 
