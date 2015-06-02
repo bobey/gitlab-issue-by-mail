@@ -1,6 +1,5 @@
 mail:
-    from:       bug@yourdomain.tld
-    host:       imap.yourdomain.tld
+    server:     imap.yourdomain.tld
     port:       143
     username:   gouzigouza
     password:   passw0rd

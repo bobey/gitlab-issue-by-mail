@@ -3,6 +3,8 @@
 namespace Bobey\GitlabIssueByMail\Command;
 
 use Bobey\GitlabIssueByMail\Configuration\ParametersConfiguration;
+use Fetch\Message;
+use Fetch\Server;
 use Gitlab\Client as GitlabClient;
 use Gitlab\Model\Project as GitlabProject;
 use Symfony\Component\Config\Definition\Processor;
@@ -30,18 +32,50 @@ class FetchMailCommand extends Command
         $configuration = new ParametersConfiguration();
         $processedConfiguration = $processor->processConfiguration($configuration, [$config]);
 
+        // Gitlab parameters
         $token = $processedConfiguration['gitlab']['token'];
         $projectId = $processedConfiguration['gitlab']['projectId'];
         $gitlabUrl = $processedConfiguration['gitlab']['host'];
+
+        // Mail parameters
+        $server = $processedConfiguration['mail']['server'];
+        $port = $processedConfiguration['mail']['port'];
+        $type = $processedConfiguration['mail']['type'];
+        $username = $processedConfiguration['mail']['username'];
+        $password = $processedConfiguration['mail']['password'];
+
+        $server = new Server($server, $port, $type);
+        $server->setAuthentication($username, $password);
 
         $client = new GitlabClient(sprintf('%s/api/v3/', $gitlabUrl));
         $client->authenticate($token, GitlabClient::AUTH_URL_TOKEN);
 
         $project = new GitlabProject($projectId, $client);
 
-        $project->createIssue('This does not work..', array(
-            'description' => 'This doesnt work properly. Please fix!',
-            'assignee_id' => null,
-        ));
+         /** @var Message[] $messages */
+        $messages = $server->getMessages();
+
+        foreach ($messages as $message) {
+
+            $issueTitle = $message->getSubject();
+            $issueContent = $message->getMessageBody();
+
+            $project->createIssue($issueTitle, [
+                'description' => $issueContent,
+            ]);
+
+            if ($output->getVerbosity() <= OutputInterface::VERBOSITY_VERBOSE) {
+                $output->writeln(sprintf('<info>Created a new issue: <comment>%s</comment></info>', $issueTitle));
+            }
+
+            $message->delete();
+        }
+
+        $output->writeln(count($messages) ?
+            sprintf('<info>Created %d new issue%s</info>', count($messages), count($messages) > 1 ? 's' : '') :
+            '<info>No new issue created</info>'
+        );
+
+        $server->expunge();
     }
 }
