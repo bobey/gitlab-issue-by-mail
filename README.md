@@ -46,3 +46,4 @@ You should create some kind of CRON to run this command regularly.
 ## TODO
 
 - Extract attachments and add them to Gitlab issue
+- Add unit tests
