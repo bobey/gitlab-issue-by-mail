@@ -38,6 +38,10 @@ description and delete it from your mail server. That's all. Nothing more!
         projectId:  1
         token:      123456789
     ```
+    
+    
+    You can add multiple configurations, they have to match this pattern `^parameters*.yml$` to be reconized by 
+    the regex. 
 
 3. `bin/console gitlab:fetch-mail -v`
 
