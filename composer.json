@@ -18,8 +18,12 @@
         "email": "is@velocity.org"
     },
     "require": {
+        "guzzlehttp/psr7": "1.4.2",
         "m4tthumphrey/php-gitlab-api": "^9.10",
         "monolog/monolog": "^1.23",
+        "php-http/curl-client": "v1.7.1",
+        "php-http/guzzle6-adapter": "v1.1.1",
+        "php-http/message": "1.7.0",
         "symfony/config": "^v4.1",
         "symfony/console": "^v4.1",
         "symfony/yaml": "^v4.1",

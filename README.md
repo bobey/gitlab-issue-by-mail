@@ -20,6 +20,12 @@ This project is a simple command you can execute every X minutes to poll mail fr
 If a new mail is detected, the script parse its content, create an issue with the mail subject as title and content as
 description and delete it from your mail server. That's all. Nothing more!
 
+## DEPENDENCIES
+
+- PHP >= `5.6.0`
+- PHP extensions
+  - `imap`
+
 ## Setup
 
 1. `git clone ...`
@@ -43,7 +49,20 @@ description and delete it from your mail server. That's all. Nothing more!
 
 You should create some kind of CRON to run this command regularly.
 
-## TODO
+## QUICK START
+
+- Install Composer (from the project root directory)
+  `scripts/get_composer.sh`
+- Run Composer to fetch all dependencies
+  `./composer.phar install`
+- Rename or copy `config.yaml.example` to `config.yaml` and edit it to match your setup
+- Run `./console gitlab:fetch-mail`
+
+### OPTIONAL
+
+- Set up a crontab or systemd timer to periodically run `./console gitlab:fetch-mail` at regular intervals
+
+## TODO / PLANNED FEATURES
 
 - Extract attachments and add them to Gitlab issue
 - Add unit tests
