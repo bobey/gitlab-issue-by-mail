@@ -1,9 +1,8 @@
 #!/usr/bin/env php
 <?php
+require 'vendor/autoload.php';
 
-require __DIR__ . '/../vendor/autoload.php';
-
-use Bobey\GitlabIssueByMail\Command\FetchMailCommand;
+use Velocityorg\GitlabIssueByMail\Command\FetchMailCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
