@@ -1,5 +1,15 @@
 #!/usr/bin/env php
 <?php
+// Make sure we're running from the project root, so every path is relative to this base
+chdir(dirname(__FILE__));
+
+if (php_sapi_name() == 'cli-server' && is_file(__DOR__ . parse_url(
+    $_SERVER['REQUEST_URI'], PHP_URL_PATH
+))) {
+    return false;
+}
+
+// Composer autoloader
 require 'vendor/autoload.php';
 
 use Velocityorg\GitlabIssueByMail\Command\FetchMailCommand;
