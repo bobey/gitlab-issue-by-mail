@@ -1,20 +1,16 @@
 <?php
-
-namespace Bobey\GitlabIssueByMail\Configuration;
+namespace Velocityorg\GitlabIssueByMail\Configuration;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
-class ParametersConfiguration implements ConfigurationInterface
-{
-    public function getConfigTreeBuilder()
-    {
+class ParametersConfiguration implements ConfigurationInterface {
+    public function getConfigTreeBuilder() {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('parameters');
 
         $rootNode
             ->children()
-
                 ->arrayNode('mail')
                     ->children()
                         ->scalarNode('server')->end()
@@ -34,9 +30,7 @@ class ParametersConfiguration implements ConfigurationInterface
                         ->scalarNode('token')->end()
                     ->end()
                 ->end()
-
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }

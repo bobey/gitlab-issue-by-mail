@@ -1,8 +1,7 @@
 <?php
+namespace Velocityorg\GitlabIssueByMail\Command;
 
-namespace Bobey\GitlabIssueByMail\Command;
-
-use Bobey\GitlabIssueByMail\Configuration\ParametersConfiguration;
+use Velocityorg\GitlabIssueByMail\Configuration\ParametersConfiguration;
 use Fetch\Message;
 use Fetch\Server;
 use Gitlab\Client as GitlabClient;
@@ -13,20 +12,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
 
-class FetchMailCommand extends Command
-{
-    protected function configure()
-    {
+class FetchMailCommand extends Command {
+    protected function configure() {
         $this
             ->setName('gitlab:fetch-mail')
-            ->setDescription('Fetch emails from given mail address and create Gitlab Issues from it');
+            ->setDescription('Fetch e-mails from specified address and create Gitlab issue(s) from the result');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $yaml = new Parser();
 
-        $config = $yaml->parse(file_get_contents( __DIR__ . '/../../../../config/parameters.yml'));
+        $config = $yaml->parse(file_get_contents('config.yaml'));
 
         $processor = new Processor();
         $configuration = new ParametersConfiguration();
@@ -47,7 +43,7 @@ class FetchMailCommand extends Command
         $server = new Server($server, $port, $type);
         $server->setAuthentication($username, $password);
 
-        $client = new GitlabClient(sprintf('%s/api/v3/', $gitlabUrl));
+        $client = new GitlabClient(sprintf('%s/api/v4/', $gitlabUrl));
         $client->authenticate($token, GitlabClient::AUTH_URL_TOKEN);
 
         $project = new GitlabProject($projectId, $client);
