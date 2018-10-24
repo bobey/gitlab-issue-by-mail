@@ -1,11 +1,24 @@
 mail:
+    # Your e-mail server's address
     server:     imap.yourdomain.tld
+
+    # Protocol (one of "pop" or "imap", defaults to "imap")
     type:       imap
+
+    # Port (usually 110 for POP3 or 143/993 for IMAP/IMAPS)
+    # Note: The underlying library does not support STARTTLS)
     port:       143
+
+    # Credentials
     username:   gouzigouza
     password:   passw0rd
 
 gitlab:
+    # Your Gitlab server host
     host:       gitlab.com
+
+    # Issues will be created under this project ID
     projectId:  1
+
+    # Your API token (must have write access)
     token:      123456789
