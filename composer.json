@@ -27,7 +27,8 @@
         "symfony/config": "^v4.1",
         "symfony/console": "^v4.1",
         "symfony/yaml": "^v4.1",
-        "tedivm/fetch": "^0.7.1"
+        "tedivm/fetch": "^0.7.1",
+        "nette/database": "^2.4"
     },
     "autoload": {
         "psr-4": {
