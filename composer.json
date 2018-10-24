@@ -1,12 +1,39 @@
 {
+    "name": "velocityorg/gitlab-issue-by-email",
+    "description": "Create a Gitlab issue by sending an e-mail",
+    "version": "1.0.1",
+    "type": "project",
+    "keywords": [
+        "gitlab", "email", "mail", "imap", "issue", "git"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steven Cook",
+            "email": "scook@velocity.org",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "is@velocity.org"
+    },
     "require": {
-        "symfony/console": "^2.6",
-        "tedivm/fetch": "^0.6.1",
-        "m4tthumphrey/php-gitlab-api": "^7.10",
-        "symfony/yaml": "^2.6",
-        "symfony/config": "^2.6"
+        "guzzlehttp/psr7": "1.4.2",
+        "m4tthumphrey/php-gitlab-api": "^9.10",
+        "monolog/monolog": "^1.23",
+        "php-http/curl-client": "v1.7.1",
+        "php-http/guzzle6-adapter": "v1.1.1",
+        "php-http/message": "1.7.0",
+        "symfony/config": "^v4.1",
+        "symfony/console": "^v4.1",
+        "symfony/yaml": "^v4.1",
+        "tedivm/fetch": "^0.7.1",
+        "nette/database": "^2.4"
     },
     "autoload": {
-        "psr-4": { "Bobey\\": "src/Bobey" }
+        "psr-4": {
+            "Bobey\\": "src/Bobey",
+            "Velocityorg\\": "src/Velocityorg"
+        }
     }
 }

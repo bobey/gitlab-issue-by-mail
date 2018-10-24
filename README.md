@@ -1,49 +1,65 @@
-# Create a Gitlab issue from a mail
+# GITLAB ISSUE BY E-MAIL
 
-Add new issue to your Gitlab by sending an email to bug@yourdomain.com
+Summary: create an Issue in Gitlab by sending an e-mail
 
 ## Why?
 
-Gitlab is a fantastic tool to work with and is getting more awesome everyday.
+Gitlab is a fantastic solution to work with and manage source code and issues. Its main features are private repository hosting, issue tracking, code review, and complete workflow all the way through deployment and production.
 
-It offers you in just a few minutes Private Repositories Hosting, great Code Review tooling for your team, Wiki,
-Issue Tracker and everything.
-
-But as awesome as it is, we must admit that the Issue Tracker lacks a few features. One of them, is the ability for your
-team or customers to send a mail to some mail address of yours and see it transformed into a beautiful Gitab Issue.
-
-This is the purpose of this ridiculously simple project.
+As great as it is, there are still a few missing features that we'd all like to have. One of these is the ability to send an e-mail and have an issue automatically created.
 
 ## How does it work?
 
-This project is a simple command you can execute every X minutes to poll mail from any address of yours.
-If a new mail is detected, the script parse its content, create an issue with the mail subject as title and content as
-description and delete it from your mail server. That's all. Nothing more!
+This simple CLI application checks an IMAP e-mail box for any new messages. It uses the subject of the e-mail as the issue title and the body of the e-mail as the issue description and creates a Gitlab issue using Gitlab's API, then the e-mail is deleted. This command can then be executed periodically with a crontab or systemd timer.
 
-## Setup
+## DEPENDENCIES
 
-1. `git clone ...`
-2. `cp config/parameters.yml.dist config/parameters.yml` and edit it to fit your needs
+- PHP >= `5.6.0`
+- PHP extensions
+  - `imap`
+  - `pdo-pgsql`
 
-    ```yaml
-    mail:
-        server:     imap.yourdomain.tld
-        type:       imap
-        port:       143
-        username:   gouzigouza
-        password:   passw0rd
+## Quick Start
 
-    gitlab:
-        host:       gitlab.com
-        projectId:  1
-        token:      123456789
-    ```
+1. `git clone` this repository
+2. `cp config.yaml.example config.yaml`
+3. Edit `config.yaml` to match your setup
+4. `composer install`
+5. `./console gitlab:fetch-mail`
 
-3. `bin/console gitlab:fetch-mail -v`
+## `confg.yaml` Example
 
-You should create some kind of CRON to run this command regularly.
+```yaml
+mail:
+    server:     imap.yourdomain.tld
+    type:       imap
+    port:       143
+    username:   gouzigouza
+    password:   passw0rd
 
-## TODO
+gitlab:
+    host:       gitlab.com
+    projectId:  1
+    token:      123456789
+```
 
+## Composer
+
+This application uses `composer` to pull in 3rd-party dependencies. If you are unable to install composer from your operating system's repositories, you may use the provided script to fetch a local copy of it. To do this, run the following command:
+
+`scripts/get_composer.sh` (run from the application's root directory)
+
+This will create an executable file called `composer.phar`.
+
+Executing `./composer.phar install` will install all dependencies
+
+## Optional configuration
+
+- Set up a crontab or systemd timer to periodically run `./console gitlab:fetch-mail` at regular intervals. This is outside the scope of this document.
+
+## To-do / Planned Features
+
+- Support STARTTLS
+- Support multiple API keys (for different users)
 - Extract attachments and add them to Gitlab issue
 - Add unit tests

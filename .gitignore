@@ -1,2 +1,3 @@
-/config/parameters.yml
-/vendor/
+vendor/
+composer.phar
+config.yaml
