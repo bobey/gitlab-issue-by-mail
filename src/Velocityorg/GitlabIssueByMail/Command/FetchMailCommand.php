@@ -101,17 +101,8 @@ class FetchMailCommand extends Command {
 
             $this->writeOutput($output, sprintf('Deleting e-mail message <info>%d</info>', $message->getOverview()->msgno));
 
-            /*if ($output->getVerbosity() <= OutputInterface::VERBOSITY_VERBOSE) {
-            //    $output->writeln(sprintf('<info>Created a new issue: <comment>%s</comment></info>', $issueTitle));
-            }*/
-
-            //$message->delete();
+            $message->delete();
         }
-
-        //$output->writeln(count($messages) ?
-        //    sprintf('<info>Created %d new issue%s</info>', count($messages), count($messages) > 1 ? 's' : '') :
-        //    '<info>No new issue created</info>'
-        //);
 
         // Expunge deleted e-mail messages
         $server->expunge();
