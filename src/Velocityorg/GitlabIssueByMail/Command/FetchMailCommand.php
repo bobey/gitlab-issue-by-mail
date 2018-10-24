@@ -1,62 +1,59 @@
 <?php
 namespace Velocityorg\GitlabIssueByMail\Command;
 
-use Velocityorg\GitlabIssueByMail\Configuration\ParametersConfiguration;
+use Velocityorg\Db;
 use Fetch\Message;
 use Fetch\Server;
 use Gitlab\Client as GitlabClient;
 use Gitlab\Model\Project as GitlabProject;
-//use Gitlab\Model\User as GitlabUser;
 use Gitlab\Api\Users;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
 
 class FetchMailCommand extends Command {
-    protected $logger;
-
     protected function configure()
     {
         $this
             ->setName('gitlab:fetch-mail')
-            ->setDescription('Fetch e-mails from specified address and create Gitlab issue(s) from the result');
+            ->setDescription('Fetch e-mail(s) and create Gitlab issue(s) from the result');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $yaml = new Parser();
-
         $config = $yaml->parse(file_get_contents('config.yaml'));
 
-        $processor = new Processor();
-        $configuration = new ParametersConfiguration();
-        $processedConfiguration = $processor->processConfiguration($configuration, [$config]);
+        $dbConnection = new Db(
+            $config['db']['type'] . ':dbname=' . $config['db']['database'],
+            $config['db']['user'],
+            $config['db']['password']
+        );
 
-        // Gitlab parameters
-        $token = $processedConfiguration['gitlab']['token'];
-        $projectId = $processedConfiguration['gitlab']['projectId'];
-        $gitlabUrl = $processedConfiguration['gitlab']['host'];
+        $db = $dbConnection->getConnection();
 
-        // Mail parameters
-        $server = $processedConfiguration['mail']['server'];
-        $port = $processedConfiguration['mail']['port'];
-        $type = $processedConfiguration['mail']['type'];
-        $username = $processedConfiguration['mail']['username'];
-        $password = $processedConfiguration['mail']['password'];
+        $server = new Server(
+            $config['mail']['server'],
+            $config['mail']['port'],
+            (array_key_exists('type', $config['mail'])) ? $config['mail']['type'] : 'imap'
+        );
 
-        $server = new Server($server, $port);
-        $server->setAuthentication($username, $password);
+        $server->setAuthentication(
+            $config['mail']['username'],
+            $config['mail']['password']
+        );
 
-        //$client = new GitlabClient(sprintf('%s/api/v4/', $gitlabUrl));
-        $client = GitlabClient::create($gitlabUrl)
-            ->authenticate($token, GitlabClient::AUTH_URL_TOKEN);
+        $client = GitlabClient::create($config['gitlab']['host'])
+            ->authenticate($config['gitlab']['token'], GitlabClient::AUTH_URL_TOKEN);
 
         /** @var Message[] $messages */
         $messages = $server->getMessages();
 
-        $project = new GitlabProject($projectId, $client);
+        $project = new GitlabProject(
+            $config['gitlab']['projectId'],
+            $client
+        );
 
         if (count($messages) > 0) {
             $this->writeOutput($output, sprintf("Found <info>%d</info> new message(s)", count($messages)));
@@ -87,12 +84,14 @@ class FetchMailCommand extends Command {
 
                 /*
                  * Update issue in the database
-                 *
-                 * UPDATE ISSUES SET '' = '' WHERE '' = '';
                  */
-                //print_r($result->id);
-                //print_r($result->project_id);
-                //print_r($result->author->show());
+                $db->query(
+                    'UPDATE issues SET',
+                    [
+                        'author_id' => $userRecord['id']
+                    ],
+                    'WHERE id = ?', $result->id
+                );
 
                 $this->writeOutput($output, sprintf('Created new issue %d : <info>%s</info>', $result->iid, $issueTitle));
             } else {
